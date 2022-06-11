@@ -1,3 +1,8 @@
+pub mod google {
+    pub mod protobuf {
+        include!("google.protobuf.rs");
+    }
+}
 pub mod org {
     pub mod pytorch {
         pub mod serve {
@@ -7,10 +12,5 @@ pub mod org {
                 }
             }
         }
-    }
-}
-pub mod google {
-    pub mod protobuf {
-        include!("google.protobuf.rs");
     }
 }

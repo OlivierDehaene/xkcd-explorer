@@ -87,12 +87,13 @@ impl xkcd_explorer_server::XkcdExplorer for XkcdExplorerService {
         let request = request.record().into_inner();
 
         let inputs: HashMap<String, Vec<u8>> =
-                    HashMap::from([("data".to_string(), request.text.clone().into_bytes())]);
-        let embeddings = self.client
-                    .clone()
-                    .predictions::<Vec<f32>>(inputs, &self.model_name, &self.model_version)
-                    .await
-                    .record()?;
+            HashMap::from([("data".to_string(), request.text.clone().into_bytes())]);
+        let embeddings = self
+            .client
+            .clone()
+            .predictions::<Vec<f32>>(inputs, &self.model_name, &self.model_version)
+            .await
+            .record()?;
 
         let database = &mut *self.data.write().await;
         database

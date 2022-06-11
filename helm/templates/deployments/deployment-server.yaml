@@ -40,11 +40,11 @@ spec:
               containerPort: 50051
           readinessProbe:
             exec:
-              command: ["/bin/grpc_health_probe", "-addr=:{{ .Values.server.service.port }}", "-service=xkcd_explorer.v1.XkcdExplorer"]
+              command: ["/bin/grpc_health_probe", "-addr=:50051", "-service=xkcd_explorer.v1.XkcdExplorer"]
             initialDelaySeconds: 5
           livenessProbe:
             exec:
-              command: ["/bin/grpc_health_probe", "-addr=:{{ .Values.server.service.port }}", "-service=xkcd_explorer.v1.XkcdExplorer"]
+              command: ["/bin/grpc_health_probe", "-addr=:50051", "-service=xkcd_explorer.v1.XkcdExplorer"]
             initialDelaySeconds: 10
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
