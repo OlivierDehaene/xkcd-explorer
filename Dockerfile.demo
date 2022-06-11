@@ -1,0 +1,11 @@
+FROM python:3.9
+
+COPY client client
+COPY demo demo
+
+WORKDIR /demo
+
+RUN pip install poetry && poetry install
+
+ENTRYPOINT ["poetry", "run", "xkcd-explorer-demo"]
+CMD ["gradio"]

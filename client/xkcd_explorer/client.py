@@ -19,12 +19,12 @@ class Client:
         self.channel = grpc.insecure_channel(self.url)
         self.stub = xkcd_explorer_pb2_grpc.XkcdExplorerStub(self.channel)
 
-    def exists(self, uuid: str) -> bool:
+    def exists(self, uuid: int) -> bool:
         """
         Test if the provided uuid exists in the XKCD Explorer database.
 
         Args:
-            uuid (str): comic id
+            uuid (int): comic id
 
         Returns:
             bool: true if exists, false otherwise
@@ -32,12 +32,12 @@ class Client:
         res = self.stub.Exists(xkcd_explorer_pb2.Object.ComicRequest(id=uuid))
         return res.exists
 
-    def get(self, uuid: str) -> Comic:
+    def get(self, uuid: int) -> Comic:
         """
         Get the comic associated to a specific uuid in the XKCD Explorer database
 
         Args:
-            uuid (str): comic id
+            uuid (int): comic id
 
         Returns:
             Comic, the comic information

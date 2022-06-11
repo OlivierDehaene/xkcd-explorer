@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "xkcd-explorer.fullname" . }}
+  name: {{ include "xkcd-explorer.torchserveName" . }}
   labels:
     {{- include "xkcd-explorer.labels" . | nindent 4 }}
-    {{- include "xkcd-explorer.serverSelectorLabels" . | nindent 4 }}
+    {{- include "xkcd-explorer.torchserveSelectorLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.server.replicaCount }}
   selector:
     matchLabels:
-      {{- include "xkcd-explorer.serverSelectorLabels" . | nindent 6 }}
+      {{- include "xkcd-explorer.torchserveSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -17,7 +17,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "xkcd-explorer.serverSelectorLabels" . | nindent 8 }}
+        {{- include "xkcd-explorer.torchserveSelectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -27,37 +27,14 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: "grpc-server"
+        - name: "torchserve-server"
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.registry}}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
-            - xkcd-explorer-server
-          env:
-            {{- if .Values.tracing.enabled }}
-            - name: COLLECTOR_ENDPOINT
-              value: {{ .Values.tracing.collectorEndpoint | quote }}
-            {{- end }}
-            - name: PARAVISION_URL
-              value: {{ .Values.server.paravisionUrl | quote }}
-            - name: VALD_URL
-              value: {{ .Values.server.valdUrl | quote }}
-            - name: RUST_LOG
-              value: {{ .Values.rustLog | quote }}
+          image: "{{ .Values.torchserve.image.registry}}/{{ .Values.torchserve.image.repository }}:{{ .Values.torchserve.image.tag }}"
+          imagePullPolicy: {{ .Values.torchserve.image.pullPolicy }}
           ports:
             - name: grpc
-              containerPort: {{ .Values.server.service.port }}
-            - name: metrics
-              containerPort: 9000
-          readinessProbe:
-            exec:
-              command: ["/bin/grpc_health_probe", "-addr=:{{ .Values.server.service.port }}", "-service=xkcd_explorer.v1.XkcdExplorer"]
-            initialDelaySeconds: 5
-          livenessProbe:
-            exec:
-              command: ["/bin/grpc_health_probe", "-addr=:{{ .Values.server.service.port }}", "-service=xkcd_explorer.v1.XkcdExplorer"]
-            initialDelaySeconds: 10
+              containerPort: 7070
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

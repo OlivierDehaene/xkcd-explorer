@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "xkcd-explorer.fullname" . }}
+  name: {{ include "xkcd-explorer.gradioDemoName" . }}
   labels:
     {{- include "xkcd-explorer.labels" . | nindent 4 }}
-    {{- include "xkcd-explorer.serverSelectorLabels" . | nindent 4 }}
+    {{- include "xkcd-explorer.gradioDemoSelectorLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.server.replicaCount }}
   selector:
     matchLabels:
-      {{- include "xkcd-explorer.serverSelectorLabels" . | nindent 6 }}
+      {{- include "xkcd-explorer.gradioDemoSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -17,7 +17,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "xkcd-explorer.serverSelectorLabels" . | nindent 8 }}
+        {{- include "xkcd-explorer.gradioDemoSelectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -27,37 +27,19 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: "grpc-server"
+        - name: "gradio-demo"
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.registry}}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
-            - xkcd-explorer-server
+          image: "{{ .Values.demo.image.registry}}/{{ .Values.demo.image.repository }}:{{ .Values.demo.image.tag }}"
+          imagePullPolicy: {{ .Values.demo.image.pullPolicy }}
           env:
-            {{- if .Values.tracing.enabled }}
-            - name: COLLECTOR_ENDPOINT
-              value: {{ .Values.tracing.collectorEndpoint | quote }}
-            {{- end }}
-            - name: PARAVISION_URL
-              value: {{ .Values.server.paravisionUrl | quote }}
-            - name: VALD_URL
-              value: {{ .Values.server.valdUrl | quote }}
-            - name: RUST_LOG
-              value: {{ .Values.rustLog | quote }}
+            - name: GRADIO_SERVER_PORT
+              value: "80"
+            - name: SERVER_URL
+              value: "http://{{ include "xkcd-explorer.fullname" . }}:{{ .Values.server.service.port }}"
           ports:
-            - name: grpc
-              containerPort: {{ .Values.server.service.port }}
-            - name: metrics
-              containerPort: 9000
-          readinessProbe:
-            exec:
-              command: ["/bin/grpc_health_probe", "-addr=:{{ .Values.server.service.port }}", "-service=xkcd_explorer.v1.XkcdExplorer"]
-            initialDelaySeconds: 5
-          livenessProbe:
-            exec:
-              command: ["/bin/grpc_health_probe", "-addr=:{{ .Values.server.service.port }}", "-service=xkcd_explorer.v1.XkcdExplorer"]
-            initialDelaySeconds: 10
+            - name: http
+              containerPort: 80
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

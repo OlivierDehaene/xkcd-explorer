@@ -28,7 +28,7 @@ message Search {
     // Prompt to use for asymmetric semantic search
     string prompt = 1;
     // Number of results to return.
-    optional uint32 topk = 3;
+    uint32 topk = 3;
   }
 
   // Represent a search response.
@@ -43,7 +43,7 @@ message Object {
   // Represent a Comic
   message Comic {
     // The id to insert.
-    int32 id = 1;
+    uint64 id = 1;
     // The comic title
     string title = 2;
     // The comic xkcd.com url
@@ -52,20 +52,22 @@ message Object {
     string image_url = 4;
     // The comic explainxkcd.com url
     string explained_url = 5;
+    // Text
+    string text = 6;
   }
 
   // Represent a request to fetch a raw object
   message ComicRequest {
     // The vector ID to be fetch.
-    int32 id = 1;
+    uint64 id = 1;
   }
 
-  // Represent the ID and similarity pair.
+  // Represent the Comic and distance pair.
   message Similarity {
     // The Comic.
     Comic comic = 1;
-    // The similarity.
-    float similarity = 2;
+    // The distance from the prompt to this comic.
+    float distance = 2;
   }
 }
 

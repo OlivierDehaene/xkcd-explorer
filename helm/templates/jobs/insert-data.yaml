@@ -1,16 +1,27 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: insert-data
+  name: {{ include "xkcd-explorer.demoDataJobName" . }}
+  labels:
+    {{- include "xkcd-explorer.labels" . | nindent 4 }}
+    {{- include "xkcd-explorer.demoDataJobSelectorLabels" . | nindent 4 }}
 spec:
   template:
     spec:
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        - name: mati-ops-registry
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "xkcd-explorer.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-      - name: data
-        image: registry.ops.mati.io/vision/api/face-retrieval/data
-        imagePullPolicy: Always
-        args: ["insert", "--data-path", "subset.csv"]
+      - name: "import-data"
+        image: "{{ .Values.demo.image.registry}}/{{ .Values.demo.image.repository }}:{{ .Values.demo.image.tag }}"
+        imagePullPolicy: {{ .Values.demo.image.pullPolicy }}
+        args: ["import-data"]
+        env:
+          - name: SERVER_URL
+            value: "http://{{ include "xkcd-explorer.fullname" . }}:{{ .Values.server.service.port }}"
       restartPolicy: Never
   backoffLimit: 1

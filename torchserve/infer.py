@@ -1,3 +1,5 @@
+# Inspired by: https://github.com/pytorch/serve/blob/master/examples/Huggingface_Transformers/Transformer_handler_generalized.py
+
 import logging
 import torch
 import transformers
@@ -71,6 +73,7 @@ class TransformersEmbeddingHandler(BaseHandler, ABC):
             if input_text is None:
                 input_text = data.get("body")
 
+            # Convert text if needed
             if isinstance(input_text, (bytes, bytearray)):
                 input_text = input_text.decode("utf-8")
 
@@ -108,9 +111,8 @@ class TransformersEmbeddingHandler(BaseHandler, ABC):
         """
 
         input_ids_batch, attention_mask_batch = input_batch
-        inferences = []
 
         model_outputs = self.model(input_ids_batch, attention_mask_batch)
-        embeddings = model_outputs.last_hidden_state[:, 0]
+        embeddings = torch.nn.functional.normalize(model_outputs.last_hidden_state[:, 0])
 
         return embeddings

@@ -195,9 +195,8 @@ checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
 
 [[package]]
 name = "faiss"
-version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "81a02c4542e302d6f19aaa139bfae294827cb8193cf8f90dbb83488d2fcdf60a"
+version = "0.11.1-alpha.0"
+source = "git+https://github.com/OlivierDehaene/faiss-rs.git#b833029646af1cff74eec9f0a8bce413812e5cb2"
 dependencies = [
  "faiss-sys",
 ]
@@ -205,8 +204,7 @@ dependencies = [
 [[package]]
 name = "faiss-sys"
 version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc81e4dd91d06c02f92a3c885025cdd4136755850ab456aef436629ff091d7ca"
+source = "git+https://github.com/OlivierDehaene/faiss-rs.git#b833029646af1cff74eec9f0a8bce413812e5cb2"
 
 [[package]]
 name = "fastrand"
@@ -751,10 +749,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "ryu"
+version = "1.0.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f3f6f92acf49d1b98f7a81226834412ada05458b7364277387724a237f062695"
+
+[[package]]
 name = "serde"
 version = "1.0.137"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "61ea8d54c77f8315140a05f4c7237403bf38b72704d031543aa1d16abbf517d1"
+
+[[package]]
+name = "serde_json"
+version = "1.0.81"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9b7ce2b32a1aed03c558dc61a5cd328f15aff2dbc17daad8fb8af04d2100e15c"
+dependencies = [
+ "itoa",
+ "ryu",
+ "serde",
+]
 
 [[package]]
 name = "sharded-slab"
@@ -985,6 +1000,20 @@ dependencies = [
  "tokio-stream",
  "tonic",
  "tonic-build",
+]
+
+[[package]]
+name = "torchserve"
+version = "0.1.0"
+dependencies = [
+ "prost",
+ "prost-types",
+ "serde",
+ "serde_json",
+ "tonic",
+ "tonic-build",
+ "tracing",
+ "tracing-error",
 ]
 
 [[package]]
@@ -1256,6 +1285,7 @@ checksum = "c811ca4a8c853ef420abd8592ba53ddbbac90410fab6903b3e79972a631f7680"
 name = "xkcd-explorer-server"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "clap",
  "faiss",
  "prost",
@@ -1265,6 +1295,7 @@ dependencies = [
  "tonic-build",
  "tonic-health",
  "tonic-reflection",
+ "torchserve",
  "tracing",
  "tracing-error",
  "tracing-subscriber",

@@ -1,15 +1,9 @@
-rustLog: info
-timeout: 20
-
-image:
-  registry: registry.ops.mati.io
-  repository: vision/api/xkcd-explorer
-  pullPolicy: IfNotPresent
-  tag: latest
-
 server:
-  paravisionUrl: http://paravision:50051
-  valdUrl: http://vald-lb-gateway:8081
+  image:
+    registry: docker.io
+    repository: xkcd-explorer/server
+    pullPolicy: IfNotPresent
+    tag: latest
 
   replicaCount: 1
 
@@ -18,14 +12,24 @@ server:
     port: 50051
 
 torchserve:
-  paravisionUrl: http://paravision:50051
-  valdUrl: http://vald-lb-gateway:8081
+  image:
+    registry: docker.io
+    repository: xkcd-explorer/torchserve
+    pullPolicy: IfNotPresent
+    tag: latest
 
   replicaCount: 1
 
   service:
     type: ClusterIP
     port: 7070
+
+demo:
+  image:
+    registry: docker.io
+    repository: xkcd-explorer/demo
+    pullPolicy: IfNotPresent
+    tag: latest
 
 imagePullSecrets: []
 

@@ -1,5 +1,4 @@
 //! Tracing utilities
-// use crate::errors::FaceRetrievalError;
 use tonic::{Request, Response, Status};
 
 pub trait Record {
@@ -20,21 +19,27 @@ where
     }
 }
 
+impl<R> Record for Response<R>
+where
+    R: std::fmt::Debug,
+{
+    /// On Success: record response and logs
+    fn record(self) -> Self {
+        tracing::Span::current().record("response", &tracing::field::debug(self.get_ref()));
+        tracing::info!("Success");
+        self
+    }
+}
+
 impl<R> Record for Result<R, Status>
 where
     R: std::fmt::Debug,
 {
-    // Record response and logs
+    // Record errors
     fn record(self) -> Self {
-        match &self {
-            Ok(response) => {
-                tracing::Span::current().record("response", &tracing::field::debug(response));
-                tracing::info!("Success");
-            }
-            Err(err) => {
-                tracing::error!("{}", err);
-            }
-        }
-        self
+        self.map_err(|err| {
+            tracing::error!("{}", err);
+            err
+        })
     }
 }

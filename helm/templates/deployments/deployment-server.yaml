@@ -27,29 +27,17 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: "grpc-server"
+        - name: "xkcd-explorer-server"
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.registry}}/{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
-            - xkcd-explorer-server
+          image: "{{ .Values.server.image.registry}}/{{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}"
+          imagePullPolicy: {{ .Values.server.image.pullPolicy }}
           env:
-            {{- if .Values.tracing.enabled }}
-            - name: COLLECTOR_ENDPOINT
-              value: {{ .Values.tracing.collectorEndpoint | quote }}
-            {{- end }}
-            - name: PARAVISION_URL
-              value: {{ .Values.server.paravisionUrl | quote }}
-            - name: VALD_URL
-              value: {{ .Values.server.valdUrl | quote }}
-            - name: RUST_LOG
-              value: {{ .Values.rustLog | quote }}
+            - name: TORCHSERVE_URL
+              value: "http://{{ include "xkcd-explorer.torchserveName" . }}:{{ .Values.torchserve.service.port }}"
           ports:
             - name: grpc
-              containerPort: {{ .Values.server.service.port }}
-            - name: metrics
-              containerPort: 9000
+              containerPort: 50051
           readinessProbe:
             exec:
               command: ["/bin/grpc_health_probe", "-addr=:{{ .Values.server.service.port }}", "-service=xkcd_explorer.v1.XkcdExplorer"]

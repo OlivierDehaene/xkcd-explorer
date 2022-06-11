@@ -154,3 +154,8 @@ cython_debug/
 
 # Ignore Gradio flagged
 flagged
+
+# Ignore downloaded models
+models
+model_store
+logs

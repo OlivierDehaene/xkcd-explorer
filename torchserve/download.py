@@ -12,6 +12,9 @@ def download(
     model_ckpt: str = "sentence-transformers/multi-qa-mpnet-base-dot-v1",
     model_root_dir: Path = "models",
 ):
+    """
+    Download and save a Hugging Face model.
+    """
     model_root_dir.mkdir(parents=True, exist_ok=True)
 
     tokenizer = AutoTokenizer.from_pretrained(model_ckpt)

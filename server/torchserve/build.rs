@@ -7,12 +7,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .build_server(false)
         .out_dir("src/pb")
         .include_file("mod.rs")
-        .compile(
-            &[
-                "proto/inference.proto"
-            ],
-            &["proto"],
-        )
+        .compile(&["proto/inference.proto"], &["proto"])
         .unwrap_or_else(|e| panic!("protobuf compilation failed: {}", e));
 
     Ok(())

@@ -1,0 +1,14 @@
+FROM pytorch/torchserve
+
+COPY torchserve/Makefile .
+COPY torchserve/requirements.txt .
+
+RUN make install
+
+COPY torchserve/download.py .
+RUN python download.py
+
+COPY torchserve/infer.py .
+RUN make archive
+
+CMD ["make", "start"]

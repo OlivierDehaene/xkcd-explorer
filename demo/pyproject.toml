@@ -5,14 +5,14 @@ description = "XKCD Explorer Gradio demo"
 authors = ["odehaene <olivier.dehaene@gmail.com>"]
 
 [tool.poetry.scripts]
-xkcd-explorer-demo = 'main:app'
+xkcd-explorer-demo = 'xkcd_explorer_demo.main:app'
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.9"
 gradio = "^3.0.15"
 xkcd-explorer = { path = "../client/" }
-
-[tool.poetry.dev-dependencies]
+typer = "^0.4.1"
+datasets = "^2.2.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -1,23 +1,30 @@
-mod pb;
-mod service;
-mod record;
 mod database;
+mod pb;
+mod record;
+mod service;
 
-use std::collections::HashMap;
-use tokio::sync::RwLock;
-use tonic::transport::Server;
-use pb::xkcd_explorer::v1::{xkcd_explorer_server, *};
+use crate::database::Database;
 use crate::service::XkcdExplorerService;
 use crate::xkcd_explorer_server::XkcdExplorerServer;
+use pb::xkcd_explorer::v1::{xkcd_explorer_server, *};
+use tokio::sync::RwLock;
+use tonic::transport::Server;
+use torchserve::TorchServeClient;
 
 pub async fn server(
-    port: u64
+    torchserve_url: String,
+    model_name: String,
+    model_version: String,
+    port: u64,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let database = HashMap::new();
+    let database = Database::new(768);
     let lock = RwLock::new(database);
 
+    // TorchServe client
+    let client = TorchServeClient::connect(torchserve_url).await;
+
     // Main service
-    let xkcd_explorer_service = XkcdExplorerService::new(lock);
+    let xkcd_explorer_service = XkcdExplorerService::new(client, model_name, model_version, lock);
 
     // Liveness service
     let (mut health_reporter, health_service) = tonic_health::server::health_reporter();

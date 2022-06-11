@@ -13,17 +13,22 @@ name = "xkcd-explorer-server"
 path = "src/main.rs"
 
 [dependencies]
+anyhow = "1.0.57"
 clap = { version = "3.1.1", features = ["derive", "env"] }
-faiss = "0.11.0"
+faiss = { git = "https://github.com/OlivierDehaene/faiss-rs.git" }
 prost = "0.10.4"
 prost-types = "0.10.1"
 tokio = { version = "1.16.1", features = ["macros", "rt-multi-thread", "sync"] }
 tonic = "0.7.2"
 tonic-health = "0.6.0"
 tonic-reflection = "0.4.0"
+torchserve = { path = "torchserve" }
 tracing = "0.1.35"
 tracing-error = "0.2.0"
 tracing-subscriber = { version = "^0.3", features = ["env-filter"] }
 
 [build-dependencies]
 tonic-build = "0.7.2"
+
+[workspace]
+members = ["torchserve"]

@@ -11,6 +11,7 @@ class Comic:
     url: str
     image_url: str
     explained_url: str
+    text: str
 
     def to_request(self) -> Object.Comic:
         return Object.Comic(
@@ -19,6 +20,7 @@ class Comic:
             url=self.url,
             image_url=self.image_url,
             explained_url=self.explained_url,
+            text=self.text
         )
 
     @classmethod
@@ -29,6 +31,7 @@ class Comic:
             url=res.url,
             image_url=res.image_url,
             explained_url=res.explained_url,
+            text=res.text
         )
 
 
@@ -37,8 +40,8 @@ class Result:
     """Search result dataclass"""
 
     comic: Comic
-    similarity: float
+    distance: float
 
     @classmethod
     def from_response(cls, res: Object.Similarity) -> "Result":
-        return cls(comic=Comic.from_response(res.comic), similarity=res.similarity)
+        return cls(comic=Comic.from_response(res.comic), distance=res.distance)
