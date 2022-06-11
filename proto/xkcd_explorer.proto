@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package xkcd_explorer.v1;
+
+service XkcdExplorer {
+    rpc Exists(Object.ComicRequest) returns (ExistsResponse){
+      option idempotency_level = IDEMPOTENT;
+    };
+    rpc Get(Object.ComicRequest) returns (Object.Comic){
+      option idempotency_level = IDEMPOTENT;
+    };
+    rpc Search(Search.Request) returns (Search.Response){
+      option idempotency_level = IDEMPOTENT;
+    };
+    rpc Insert(Object.Comic) returns (Empty);
+}
+
+// Represent a Exists response.
+message ExistsResponse{
+  // True if id exists, False otherwise
+  bool exists = 1;
+}
+
+// Search related messages.
+message Search {
+  // Represent a search request.
+  message Request {
+    // Prompt to use for asymmetric semantic search
+    string prompt = 1;
+    // Number of results to return.
+    optional uint32 topk = 3;
+  }
+
+  // Represent a search response.
+  message Response {
+    // Search results.
+    repeated Object.Similarity results = 1;
+  }
+}
+
+// Common messages.
+message Object {
+  // Represent a Comic
+  message Comic {
+    // The id to insert.
+    int32 id = 1;
+    // The comic title
+    string title = 2;
+    // The comic xkcd.com url
+    string url = 3;
+    // The comic image url
+    string image_url = 4;
+    // The comic explainxkcd.com url
+    string explained_url = 5;
+  }
+
+  // Represent a request to fetch a raw object
+  message ComicRequest {
+    // The vector ID to be fetch.
+    int32 id = 1;
+  }
+
+  // Represent the ID and similarity pair.
+  message Similarity {
+    // The Comic.
+    Comic comic = 1;
+    // The similarity.
+    float similarity = 2;
+  }
+}
+
+// Represent an empty message.
+message Empty {}

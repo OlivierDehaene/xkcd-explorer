@@ -1,0 +1,15 @@
+[package]
+name = "torchserve"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bytes = "^1.1"
+prost = "^0.10"
+prost-types = "^0.10"
+tonic = "^0.7"
+tracing = "^0.1"
+tracing-error = "^0.2"
+
+[build-dependencies]
+tonic-build = "0.7"

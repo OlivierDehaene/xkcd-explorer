@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "xkcd-explorer.torchserveName" . }}
+  labels:
+    {{- include "xkcd-explorer.labels" . | nindent 4 }}
+    {{- include "xkcd-explorer.torchserveSelectorLabels" . | nindent 4 }}
+spec:
+  type: {{ .Values.torchserve.service.type }}
+  ports:
+    - port: {{ .Values.torchserve.service.port }}
+      targetPort: grpc
+      protocol: TCP
+      name: grpc
+  selector:
+    {{- include "xkcd-explorer.torchserveSelectorLabels" . | nindent 4 }}

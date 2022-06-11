@@ -1,0 +1,56 @@
+rustLog: info
+timeout: 20
+
+image:
+  registry: registry.ops.mati.io
+  repository: vision/api/xkcd-explorer
+  pullPolicy: IfNotPresent
+  tag: latest
+
+server:
+  paravisionUrl: http://paravision:50051
+  valdUrl: http://vald-lb-gateway:8081
+
+  replicaCount: 1
+
+  service:
+    type: ClusterIP
+    port: 50051
+
+torchserve:
+  paravisionUrl: http://paravision:50051
+  valdUrl: http://vald-lb-gateway:8081
+
+  replicaCount: 1
+
+  service:
+    type: ClusterIP
+    port: 7070
+
+imagePullSecrets: []
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate: {}
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

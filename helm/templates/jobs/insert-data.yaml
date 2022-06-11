@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: insert-data
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+        - name: mati-ops-registry
+      containers:
+      - name: data
+        image: registry.ops.mati.io/vision/api/face-retrieval/data
+        imagePullPolicy: Always
+        args: ["insert", "--data-path", "subset.csv"]
+      restartPolicy: Never
+  backoffLimit: 1

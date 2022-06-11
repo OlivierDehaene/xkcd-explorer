@@ -1,0 +1,7 @@
+apiVersion: v2
+name: xkcd-explorer
+description: XKCD Explorer Helm chart
+
+type: application
+
+version: 0.1.0
