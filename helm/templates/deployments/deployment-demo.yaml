@@ -36,7 +36,7 @@ spec:
             - name: GRADIO_SERVER_PORT
               value: "80"
             - name: SERVER_URL
-              value: "http://{{ include "xkcd-explorer.fullname" . }}:{{ .Values.server.service.port }}"
+              value: "{{ include "xkcd-explorer.fullname" . }}:{{ .Values.server.service.port }}"
           ports:
             - name: http
               containerPort: 80

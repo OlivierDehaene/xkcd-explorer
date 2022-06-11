@@ -22,6 +22,6 @@ spec:
         args: ["import-data"]
         env:
           - name: SERVER_URL
-            value: "http://{{ include "xkcd-explorer.fullname" . }}:{{ .Values.server.service.port }}"
+            value: "{{ include "xkcd-explorer.fullname" . }}:{{ .Values.server.service.port }}"
       restartPolicy: Never
   backoffLimit: 1
