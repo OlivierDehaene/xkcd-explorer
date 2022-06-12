@@ -26,7 +26,7 @@ def search(prompt: str) -> Tuple[List[str], pd.DataFrame]:
     comic_urls, rows: Tuple[List[str], List[List[str]]]
     """
     global CLIENT
-    results = CLIENT.search(prompt, topk=10)
+    results = CLIENT.search(prompt, topk=5)
 
     image_urls = []
     rows = []

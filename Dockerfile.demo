@@ -1,11 +1,18 @@
 FROM python:3.9
 
 COPY client client
-COPY demo demo
+
+# Install poetry
+RUN pip install poetry
 
 WORKDIR /demo
 
-RUN pip install poetry && poetry install
+# Cache dependency install
+COPY demo/pyproject.toml demo/poetry.lock .
+RUN poetry install --no-root --no-dev
+
+COPY demo .
+RUN poetry install --no-dev
 
 ENTRYPOINT ["poetry", "run", "xkcd-explorer-demo"]
 CMD ["gradio"]

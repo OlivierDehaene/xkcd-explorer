@@ -76,7 +76,7 @@ impl xkcd_explorer_server::XkcdExplorer for XkcdExplorerService {
 
         let database = &mut *self.data.write().await;
         let results = database
-            .search(embeddings, 10)
+            .search(embeddings, request.topk as _)
             .map_err(|err| Status::unavailable(err.to_string()))
             .record()?;
         Ok(Response::new(crate::search::Response { results }).record())
