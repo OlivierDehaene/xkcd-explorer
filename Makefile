@@ -15,5 +15,8 @@ k9s: ## Launch k9s
 up: ## Run `tilt up` using local Kind cluster
 	kubectl config use-context kind-kind && tilt up
 
+up-local: ## Run `tilt up` using local resources
+	tilt up -- --local
+
 down: ## Destroy tilt resources from local Kind cluster
 	kubectl config use-context kind-kind && tilt down
