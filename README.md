@@ -3,6 +3,8 @@
 A fun project where the idea is to encode the text of the XKCD comics using a machine learning model to be able to
 search through all available comics with a prompt.
 
+![](assets/demo.gif)
+
 1. All XKCD comics were scrapped from xkcd.com and explainxkcd.com to create a 
 [Hugging Face dataset](https://huggingface.co/datasets/olivierdehaene/xkcd).
 
