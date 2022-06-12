@@ -34,7 +34,7 @@ if local_exec:
 
     local_resource(
         "xkcd-explorer-demo-data-job",
-        serve_cmd="xkcd-explorer-demo import-data",
+        "xkcd-explorer-demo import-data",
         labels="xkcd-explorer",
         resource_deps=["xkcd-explorer"],
         auto_init=False,
