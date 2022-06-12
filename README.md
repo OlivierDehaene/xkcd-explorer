@@ -18,6 +18,9 @@ inside the database.
 
 ### Run with Tilt and Kubernetes
 
+**WARNING:** as Torchserve does not have an arm64 Docker image, this can be painfully slow on M1 Macs. It also takes
+quite long to pull and build all images.
+
 #### Run
 
 ```bash
